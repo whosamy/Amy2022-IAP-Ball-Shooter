@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Shoot;
 import frc.robot.subsystems.BallShooter;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,7 +25,13 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final Shoot lowShoot = new Shoot(Constants.lowSpeed);
+  private final Shoot midShoot = new Shoot(Constants.midSpeed);
+  private final Shoot highShoot = new Shoot(Constants.highSpeed);
   private static Joystick joystick;
+  private static JoystickButton lowSpeedButton = new JoystickButton(joystick, Constants.lowSpeedButton);
+  private static JoystickButton midSpeedButton = new JoystickButton(joystick, Constants.midSpeedButton);
+  private static JoystickButton highSpeedButton = new JoystickButton(joystick, Constants.highSpeedButton);
   private final static BallShooter ballShooter = new BallShooter();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -40,15 +47,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    if(joystick.getRawButtonPressed(Constants.lowSpeedButton)){
-      ballShooter.setMode(Constants.lowSpeed);
-    }
-    if(joystick.getRawButtonPressed(Constants.midSpeedButton)){
-      ballShooter.setMode(Constants.midSpeed);
-    }
-    if(joystick.getRawButtonPressed(Constants.highSpeedButton)){
-      ballShooter.setMode(Constants.highSpeed);
-    }
+    lowSpeedButton.whenPressed(lowShoot);
+    midSpeedButton.whenPressed(midShoot);
+    highSpeedButton.whenPressed(highShoot);
   }
   
   /**

@@ -53,6 +53,9 @@ public class BallShooter extends SubsystemBase {
     //pid.setSetpoint(targetSpeed);
   flyWheel.set(ControlMode.PercentOutput, pid.calculate(getRPM(), targetSpeed));
   }
+  public void stopFlywheel(){
+    flyWheel.set(ControlMode.PercentOutput, 0);
+  }
   public void setFeedOnOff(boolean onOrOff){
     if (onOrOff) {
       feedWheel.set(ControlMode.PercentOutput, 0.0);
@@ -75,12 +78,6 @@ public class BallShooter extends SubsystemBase {
     // Take care of Fly Wheel first
     //breakBeam.whenActive(timer.start());
     SmartDashboard.putNumber("rpm", getRPM());
-    if(RobotContainer.getJoystick().getRawButtonPressed(Constants.speedUpButton)){
-      setFlySpeed(speed);
-    }
-    else if(RobotContainer.getJoystick().getRawButtonPressed(Constants.stopButton)){
-      flyWheel.set(ControlMode.PercentOutput, 0);
-    }
     //double drivePowerLevel = pid.calculate(getRPM());
     //flyWheel.set(ControlMode.PercentOutput, drivePowerLevel);
 
