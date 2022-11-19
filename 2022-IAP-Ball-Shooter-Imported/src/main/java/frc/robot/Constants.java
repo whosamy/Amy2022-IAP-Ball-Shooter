@@ -30,8 +30,8 @@ public final class Constants {
 
     public static final int encoderTicks = 24;
 
-    public static final int lowSpeed = 1;
-    public static final int midSpeed = 3;
-    public static final int highSpeed = 10;
-    public static final int fullSpeedInRpm = 2400;
+    public static final double lowSpeed = 1;
+    public static final double midSpeed = 3;
+    public static final double highSpeed = 10;
+    public static final double fullSpeedInRpm = 2400;
 }
