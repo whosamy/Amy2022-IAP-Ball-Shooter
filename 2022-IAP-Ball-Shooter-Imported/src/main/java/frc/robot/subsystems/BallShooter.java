@@ -3,11 +3,14 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import java.util.ResourceBundle.Control;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
@@ -21,26 +24,30 @@ import frc.robot.RobotContainer;
 public class BallShooter extends SubsystemBase {
   /** Creates a new BallShooter. */
 
-  private static double kp = 0.07;
+  private static double kp = 0.01;
   private static double kd = 0.0;
   private static double ki = 0.0;
   private static double period = 0.1;
 
-  private Timer timer = new Timer();
   private WPI_TalonSRX flyWheel = new WPI_TalonSRX(Constants.flyWheelID);
+  private WPI_TalonSRX rightFlyWheel = new WPI_TalonSRX(Constants.rightFlyWheelID);
   private WPI_TalonSRX feedWheel = new WPI_TalonSRX(Constants.feedWheelID);
   private Trigger breakBeam = new Trigger();
-  private PIDController pid = new PIDController(kp, ki, kd, period);
+  private PIDController pid = new PIDController(kp, ki, kd);
   private double ticksToRPM = (Constants.encoderTicks)/1000;
   private double speed = Constants.midSpeed;
+  private SimpleMotorFeedforward leftFlywheelFF = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
   public BallShooter() {
     flyWheel.configFactoryDefault();
+    rightFlyWheel.configFactoryDefault();
     feedWheel.configFactoryDefault();
 
     flyWheel.setInverted(false);
+    rightFlyWheel.configFactoryDefault();
     feedWheel.setInverted(false);
 
     flyWheel.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+    rightFlyWheel.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
     pid.setSetpoint(0.0);
   }
@@ -51,10 +58,13 @@ public class BallShooter extends SubsystemBase {
 
   public void setFlySpeed(double targetSpeed){
     //pid.setSetpoint(targetSpeed);
-  flyWheel.set(ControlMode.PercentOutput, pid.calculate(getRPM(), targetSpeed));
+    flyWheel.set((leftFlywheelFF.calculate(targetSpeed))/12.0 + pid.calculate(getRPM(), targetSpeed));
+  //flyWheel.set(ControlMode.PercentOutput, pid.calculate(getRPM(), targetSpeed));
+  rightFlyWheel.set((leftFlywheelFF.calculate(targetSpeed))/12.0 + pid.calculate(getRPM(), targetSpeed));
   }
   public void stopFlywheel(){
     flyWheel.set(ControlMode.PercentOutput, 0);
+    rightFlyWheel.set(ControlMode.PercentOutput, 0);
   }
   public void setFeedOnOff(boolean onOrOff){
     if (onOrOff) {
@@ -67,6 +77,7 @@ public class BallShooter extends SubsystemBase {
 
   public void resetEncoder(){
     flyWheel.setSelectedSensorPosition(0);
+    rightFlyWheel.setSelectedSensorPosition(0);
   }
 
   public void setMode(double newSpeed){

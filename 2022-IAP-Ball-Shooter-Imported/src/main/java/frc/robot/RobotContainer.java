@@ -29,14 +29,17 @@ public class RobotContainer {
   private final Shoot midShoot = new Shoot(Constants.midSpeed);
   private final Shoot highShoot = new Shoot(Constants.highSpeed);
   private static Joystick joystick;
-  private static JoystickButton lowSpeedButton = new JoystickButton(joystick, Constants.lowSpeedButton);
-  private static JoystickButton midSpeedButton = new JoystickButton(joystick, Constants.midSpeedButton);
-  private static JoystickButton highSpeedButton = new JoystickButton(joystick, Constants.highSpeedButton);
+  private static JoystickButton lowSpeedButton;
+  private static JoystickButton midSpeedButton;
+  private static JoystickButton highSpeedButton;
   private final static BallShooter ballShooter = new BallShooter();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     joystick = new Joystick(Constants.joystick);
+    lowSpeedButton = new JoystickButton(joystick, Constants.lowSpeedButton);
+    midSpeedButton = new JoystickButton(joystick, Constants.midSpeedButton);
+    highSpeedButton = new JoystickButton(joystick, Constants.highSpeedButton);
     configureButtonBindings();
   }
 
