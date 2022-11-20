@@ -44,6 +44,10 @@ public class Shoot extends CommandBase {
     if(RobotContainer.getJoystick().getRawButtonPressed(Constants.stopButton)){
       return true;
     }
+    if(speed == Constants.lowSpeed && RobotContainer.getJoystick().getRawButtonPressed(Constants.midSpeedButton)){
+      return true;
+    }
+   
     return false;
   }
 }
